@@ -14,7 +14,7 @@ const Student = () => {
     const [student, setStudent] = useState([]);
 
     useEffect(() => {
-        fetch('baseapp-env.eba-5iac8m4p.us-east-1.elasticbeanstalk.com/student/getAll', {
+        fetch('http://baseapp-env.eba-5iac8m4p.us-east-1.elasticbeanstalk.com/student/getAll', {
             method: "GET"
         }).then(res => res.json())
             .then((res) => {
