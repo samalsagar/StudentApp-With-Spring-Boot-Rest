@@ -12,36 +12,48 @@ const Student = () => {
     const [openPopup, setOpenPopup] = useState(false);
     const [msg, setMsg] = useState('');
     const [student, setStudent] = useState([]);
-
+    const url = 'http://baseapp-env.eba-5iac8m4p.us-east-1.elasticbeanstalk.com';
     useEffect(() => {
-        fetch('http://baseapp-env.eba-5iac8m4p.us-east-1.elasticbeanstalk.com/student/getAll', {
-            method: "GET"
-        }).then(res => res.json())
-            .then((res) => {
-                console.log(res);   
-                setStudent(res)
-            });
-    })
+        getApi();
+    }, [])
+
+    const getApi = async () => {
+        const requestOptions = {
+            method: "GET",
+            redirect: "follow"
+        };
+
+        await fetch("http://systemstudnet-env.eba-ywxvdnfi.us-east-1.elasticbeanstalk.com/student/getAll", requestOptions)
+            .then((response) => response.json())
+            .then((result) => setStudent(result))
+            .catch((error) => console.error(error));
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        postApi();
+    }
+
+    const postApi = async() => {
         const studentDetails = { name, address };
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
 
-        console.log(JSON.stringify(studentDetails));
-
-        // console.log(studentDetails);
-
-        fetch('http://baseapp-env.eba-5iac8m4p.us-east-1.elasticbeanstalk.com/student/add', {
+        const requestOptions = {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(studentDetails)
-        }).then(async (response) => {
-            const data = await response.text(); // Use response.json() if you return JSON
-            setOpenPopup(true);
-            setMsg(data);
-        }).catch((error) => {
-            console.log("eroor found")
-        });
+            headers: myHeaders,
+            body: JSON.stringify(studentDetails),
+            redirect: "follow"
+        };
+
+        await fetch("http://systemstudnet-env.eba-ywxvdnfi.us-east-1.elasticbeanstalk.com/student/add", requestOptions)
+            .then(async (response) => {
+                    const data = await response.text(); // Use response.json() if you return JSON
+                    console.log(data);
+                    setOpenPopup(true);
+                    setMsg(data);
+                })
+            .catch((error) => console.error(error));
     }
     return (
         <>
@@ -62,7 +74,7 @@ const Student = () => {
                 {openPopup && <Popup message={msg} onClose={() => setOpenPopup(false)} />}
 
                 <div className='  bg-gray-200 mx-4 overflow-auto mt-4 rounded-xl w-1/2 p-6'
-                 style={{ maxHeight: '400px' }}
+                    style={{ maxHeight: '400px' }}
                 >
                     <h1 className='font-serif font-bold text-blue-800 underline'>STUDENT DETAILS</h1>
 
