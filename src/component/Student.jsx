@@ -12,7 +12,7 @@ const Student = () => {
     const [openPopup, setOpenPopup] = useState(false);
     const [msg, setMsg] = useState('');
     const [student, setStudent] = useState([]);
-    const url = 'http://baseapp-env.eba-5iac8m4p.us-east-1.elasticbeanstalk.com';
+    // const url = 'http://baseapp-env.eba-5iac8m4p.us-east-1.elasticbeanstalk.com';
     useEffect(() => {
         getApi();
     }, [])
@@ -22,11 +22,13 @@ const Student = () => {
             method: "GET",
             redirect: "follow"
         };
-
         await fetch("http://systemstudnet-env.eba-ywxvdnfi.us-east-1.elasticbeanstalk.com/student/getAll", requestOptions)
             .then((response) => response.json())
-            .then((result) => setStudent(result))
-            .catch((error) => console.error(error));
+            .then((result) =>{
+                setStudent(result);
+                console.log(result);
+            })
+            // .catch((error) => console.error(error));
     }
 
     const handleSubmit = (e) => {
@@ -46,7 +48,7 @@ const Student = () => {
             redirect: "follow"
         };
 
-        await fetch("http://systemstudnet-env.eba-ywxvdnfi.us-east-1.elasticbeanstalk.com/student/add", requestOptions)
+        await fetch("https://systemstudnet-env.eba-ywxvdnfi.us-east-1.elasticbeanstalk.com/student/add", requestOptions)
             .then(async (response) => {
                     const data = await response.text(); // Use response.json() if you return JSON
                     console.log(data);
